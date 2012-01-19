@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
+import javax.swing.event.CaretEvent;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.DocumentFilter.FilterBypass;
 
@@ -18,12 +20,19 @@ public class PoseidonConsole extends BaseConsole {
 
     protected Deque<PoseidonEventListener> eventListeners;
     protected Deque<CommandListener> commandListeners;
+    protected HashMap<Integer, String> history;
+    /**
+     * The position of the history log which increases or decreases when the
+     * user uses the up or down arrow keys and gets reset to the most current
+     * item's position when enter is clicked
+     */
+    protected int historyPosition;
 
     public PoseidonConsole() {
         this("~");
         eventListeners = new LinkedList<PoseidonEventListener>();
         commandListeners = new LinkedList<CommandListener>();
-
+        history = new HashMap<Integer, String>();
     }
 
     public PoseidonConsole(String path) {
@@ -56,12 +65,61 @@ public class PoseidonConsole extends BaseConsole {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        super.keyPressed(e);//must invoke to get default functionality of setting new line offset
+        if (e.isControlDown()) {
+            if (e.getKeyCode() == KeyEvent.VK_V) {
+                e.consume();//must consume event to prevent default paste action
+                handlePasting();
+                return;
+            }
+        }
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             e.consume();
             printNewLine();
-            if (console.getStyledDocument().getLength() > 0) {
-                console.setCaretPosition(console.getStyledDocument().getLength());
+//            if (console.getStyledDocument().getLength() > 0) {
+//                console.setCaretPosition(console.getStyledDocument().getLength());
+//            }
+        }
+    }
+
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            PoseidonCommand command = filter.getCommand();
+            fireCommand(command);
+            if (!command.toString().isEmpty()) {
+                history.put(historyPosition++, command.toString());
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            if ((historyPosition - 1) >= 0) {
+                historyPosition--;
+                if (history.containsKey(historyPosition)) {
+                    filter.clearUserInput();
+                    printInplace(history.get(historyPosition));
+                }
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            if ((historyPosition + 1) <= history.size()) {
+                historyPosition++;
+                if (history.containsKey(historyPosition)) {
+                    filter.clearUserInput();
+                    printInplace(history.get(historyPosition));
+                }
+            }
+        }
+    }
+
+    public void keyTyped(KeyEvent e) {
+    }
+
+    public void caretUpdate(CaretEvent e) {
+        int location = e.getDot();
+        if (e.getDot() == e.getMark() & !pasting) {
+            //only try to handle caret positioning if the user hasn't pasted
+            if (!filter.validCaretPosition(location)) {
+                //don't change the range that the caret is allowed to be in
+                //just move the caret into the allowed range
+                filter.updateCaretPosition(false);
             }
         }
     }
@@ -90,9 +148,9 @@ public class PoseidonConsole extends BaseConsole {
 
     @Override
     protected void fireOnInsert(FilterBypass fb, int offset, String string, AttributeSet attr) {
-        for (PoseidonEventListener listener : eventListeners) {
-            listener.onInsert(fb, offset, string, attr);
-        }
+//        for (PoseidonEventListener listener : eventListeners) {
+//            listener.onInsert(fb, offset, string, attr);
+//        }
     }
 
     @Override

@@ -12,14 +12,14 @@ public class Tab extends JPanel {
     private String currentDirectory;
     private String title;
     private int id;
-    private PoseidonInternalCommands internalCommands;
+    private EmulatorlCommands internalCommands;
 
     /**
      * Creates new form Tab
      */
     public Tab(String path) {
         currentDirectory = path;
-        internalCommands = new PoseidonInternalCommands();
+        internalCommands = new EmulatorlCommands();
         initComponents();
         setOpaque(false);
         setBackground(console.getBackgroundColour());

@@ -7,11 +7,9 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
-import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.DocumentFilter.FilterBypass;
 import javax.swing.text.*;
@@ -32,12 +30,10 @@ public abstract class BaseConsole extends JPanel implements KeyListener, CaretLi
     protected String currentDirectory = "~";
     protected PoseidonDocumentFilter filter;
     protected boolean usingPrefix = true;
-    protected HashMap<Integer, String> history;
     protected boolean pasting = false;
 
     public BaseConsole(String path) {
         currentDirectory = path;
-        history = new HashMap<Integer, String>();
         init();
     }
 
@@ -65,7 +61,6 @@ public abstract class BaseConsole extends JPanel implements KeyListener, CaretLi
         setLayout(new GridLayout(1, 1));
         filter = new PoseidonDocumentFilter(this);
         ((AbstractDocument) console.getStyledDocument()).setDocumentFilter(filter);
-        printNewLine();
         // Add Copy functionality to the Console
         //   and remove Cut/Paste functionality
         JTextComponent.KeyBinding newBindings[] = {
@@ -81,11 +76,12 @@ public abstract class BaseConsole extends JPanel implements KeyListener, CaretLi
         };
         Keymap k = console.getKeymap();
         JTextComponent.loadKeymap(k, newBindings, console.getActions());
-        validate();
+        printNewLine();
     }
 
     public final void printNewLine() {
-        print("\n");//add the default console prompt
+        print("\n");
+        filter.updateCaretPosition();
     }
 
     public final void printWithoutPrefix(String contents) {
@@ -99,18 +95,26 @@ public abstract class BaseConsole extends JPanel implements KeyListener, CaretLi
     }
 
     public final void print(String processed) {
-        print(processed, attr);
+        print(processed, attr, false);
     }
 
-    protected void print(String output, SimpleAttributeSet style) {
+    public void printInplace(String content) {
+        usingPrefix = false;
+        print(content, attr, true);
+        usingPrefix = true;
+    }
+
+    public void print(String output, SimpleAttributeSet style, boolean inplace) {
         try {
             String pre = "";
-            if (output.equalsIgnoreCase("\n")) {
-                //if it's not the very first insert then do a new line before the prefix
-                if (getConsoleOffset() != 0) {
-                    pre = output;
+            if (!inplace) {
+                if (output.equalsIgnoreCase("\n")) {
+                    //if it's not the very first insert then do a new line before the prefix
+                    if (getConsoleOffset() != 0) {
+                        pre = output;
+                    }
+                    output = "";
                 }
-                output = "";
             }
             console.getStyledDocument().insertString(getConsoleOffset(), pre + getLinePrefix() + output, attr);
         } catch (BadLocationException ex) {
@@ -184,7 +188,7 @@ public abstract class BaseConsole extends JPanel implements KeyListener, CaretLi
     /**
      * Handles input when the user presses Ctrl+V
      */
-    private void handlePasting() {
+    protected void handlePasting() {
         pasting = true;
         String pastedStr;
         Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -231,40 +235,6 @@ public abstract class BaseConsole extends JPanel implements KeyListener, CaretLi
         return console.getStyledDocument().getEndPosition().getOffset() - 1;
     }
 
-    public void keyTyped(KeyEvent e) {
-    }
-
-    public void keyPressed(KeyEvent e) {
-        if (e.isControlDown()) {
-            if (e.getKeyCode() == KeyEvent.VK_V) {
-                e.consume();//must consume event to prevent default paste action
-                handlePasting();
-            }
-        }
-    }
-
-    public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            //e.consume();
-            //then set the new line offset
-            filter.setNewLineOffset(getConsoleOffset());
-            PoseidonCommand command = filter.getCommand();
-            fireCommand(command);
-            //history.push(command);
-            //System.out.println("Command:" + command);
-        }
-    }
-
-    public void caretUpdate(CaretEvent e) {
-        int location = e.getDot();
-        if (e.getDot() == e.getMark() & !pasting) {
-            //only try to handle caret positioning if the user hasn't pasted
-            if (!filter.validCaretPosition(location)) {
-                console.setCaretPosition(filter.caretPosition());
-            }
-        }
-    }
-
     /**
      * Get a reference to the JTextPane
      *
@@ -272,6 +242,23 @@ public abstract class BaseConsole extends JPanel implements KeyListener, CaretLi
      */
     public JTextPane getConsole() {
         return console;
+    }
+
+    /**
+     * Sets whether or not the console is prefixed
+     *
+     * @param using if true then a prefix such as user@host> is shown if false
+     * then nothing
+     */
+    public void setUsingPrefix(boolean using) {
+        usingPrefix = using;
+    }
+
+    /**
+     * @return true if the console is using a prefix, false otherwise
+     */
+    public boolean isUsingPrefix() {
+        return usingPrefix;
     }
 
     protected abstract void fireCommand(PoseidonCommand command);
