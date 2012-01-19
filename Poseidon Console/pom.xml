@@ -8,6 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Poseidon Console</name>
+    <description>Provides the "console" interface for using any terminal like application. Handles event processing and manages things such as command history.</description>
     <parent>
         <artifactId>poseidon</artifactId>
         <groupId>info.crlog</groupId>

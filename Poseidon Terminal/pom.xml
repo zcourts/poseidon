@@ -14,6 +14,9 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <name>Poseidon Emulator</name>
+    <description>
+        Uses the console module as it's interface and provides an implementation for all the supported commands and functionality Poseidon offers
+    </description>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
