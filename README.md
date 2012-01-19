@@ -4,7 +4,7 @@ a "terminal emulator" which uses the console.
 
 # Intended features
 * Cross Platform, I use both Linux and Windows so all the implemented internal commands will work accross OSs
-* Eventually the project will implement most or all of Linx's bash internal commands http://linux.about.com/library/cmd/blcmdl1_builtin.htm
+* Eventually the project will implement most or all of Linux's bash internal commands http://linux.about.com/library/cmd/blcmdl1_builtin.htm
 * Support for plugins written specifically for Poseidon
 * Support for executing any external command available on the user's path
 
