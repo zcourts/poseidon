@@ -67,7 +67,7 @@ public class PoseidonDocumentFilter extends DocumentFilter {
         String input = getInput(false);
         StyledDocument doc = console().getStyledDocument();
         try {
-            doc.remove(doc.getLength() - input.length(), input.length());
+            doc.remove(console.getConsoleOffset() - input.length(), input.length());
         } catch (BadLocationException ex) {
             Logger.getLogger(PoseidonDocumentFilter.class.getName()).log(Level.SEVERE, ex.getMessage());
         }
@@ -115,7 +115,7 @@ public class PoseidonDocumentFilter extends DocumentFilter {
             newLineOffset = -1;
             oldNewLineOffset = 0;
             fb.remove(0, length);
-        } else if ((offset >= (newLineOffset + console.getLinePrefix().length()))) {
+        } else if ((offset >= (newLineOffset))){// + console.getLinePrefix().length()))) {
             fb.remove(offset, length);
         }
     }
@@ -197,15 +197,15 @@ public class PoseidonDocumentFilter extends DocumentFilter {
      * position is forced into the allowed range.
      */
     public void updateCaretPosition(boolean updateOldOffset) {
+        //set the new line offset
+        int newRangeStart = console.getConsoleOffset();
         if (updateOldOffset) {
-            //set the new line offset
-            int newRangeStart = console.getConsoleOffset();
             if (newLineOffset >= 0) {
                 oldNewLineOffset = newLineOffset;
             }
             newLineOffset = newRangeStart;
         }
         //then add the default console prompt (MUST BE DONE IN THIS ORDER!!!)
-        console().setCaretPosition(console.getConsoleOffset());
+        console().setCaretPosition(newRangeStart);
     }
 }
