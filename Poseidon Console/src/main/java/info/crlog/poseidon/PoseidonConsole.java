@@ -75,9 +75,6 @@ public class PoseidonConsole extends BaseConsole {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             e.consume();
             printNewLine();
-//            if (console.getStyledDocument().getLength() > 0) {
-//                console.setCaretPosition(console.getStyledDocument().getLength());
-//            }
         }
     }
 
@@ -86,6 +83,8 @@ public class PoseidonConsole extends BaseConsole {
             PoseidonCommand command = filter.getCommand();
             fireCommand(command);
             if (!command.toString().isEmpty()) {
+                //reset history position to the end (historyPosition is 0 based so -1)
+                historyPosition = history.size() - 1;
                 history.put(historyPosition++, command.toString());
             }
         }
