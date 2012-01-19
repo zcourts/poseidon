@@ -104,6 +104,7 @@ public class PoseidonDocumentFilter extends DocumentFilter {
     @Override
     public void remove(FilterBypass fb, int offset, int length) throws
             BadLocationException {
+        console.fireOnRemove(fb, offset, length);
         if (forceClear) {
             newLineOffset = -1;
             oldNewLineOffset = 0;
@@ -131,6 +132,7 @@ public class PoseidonDocumentFilter extends DocumentFilter {
     @Override
     public void insertString(FilterBypass fb, int offset, String string,
             AttributeSet attr) throws BadLocationException {
+        console.fireOnInsert(fb, offset, string, attr);
         fb.insertString(offset, string, attr);
     }
 
@@ -152,6 +154,7 @@ public class PoseidonDocumentFilter extends DocumentFilter {
     @Override
     public void replace(FilterBypass fb, int offset, int length, String text,
             AttributeSet attrs) throws BadLocationException {
+        console.fireOnReplace(fb, offset, length, text, attrs);
         fb.replace(offset, length, text, attrs);
     }
 

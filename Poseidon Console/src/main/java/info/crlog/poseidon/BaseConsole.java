@@ -7,14 +7,13 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.net.UnknownHostException;
-import java.util.Deque;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.text.DocumentFilter.FilterBypass;
 import javax.swing.text.*;
 
 /**
@@ -35,12 +34,10 @@ public abstract class BaseConsole extends JPanel implements KeyListener, CaretLi
     protected boolean usingPrefix = true;
     protected HashMap<Integer, String> history;
     protected boolean pasting = false;
-    protected Deque<CommandListener> commandListeners;
 
     public BaseConsole(String path) {
         currentDirectory = path;
         history = new HashMap<Integer, String>();
-        commandListeners = new LinkedList<CommandListener>();
         init();
     }
 
@@ -278,4 +275,10 @@ public abstract class BaseConsole extends JPanel implements KeyListener, CaretLi
     }
 
     protected abstract void fireCommand(PoseidonCommand command);
+
+    protected abstract void fireOnRemove(FilterBypass fb, int offset, int length);
+
+    protected abstract void fireOnInsert(FilterBypass fb, int offset, String string, AttributeSet attr);
+
+    protected abstract void fireOnReplace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs);
 }
