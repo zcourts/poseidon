@@ -1,10 +1,12 @@
 package info.crlog.poseidon;
 
+import info.crlog.poseidon.event.PoseidonCommandListener;
+
 /**
  *
  * @author Courtney Robinson <courtney@crlog.info>
  */
-public class EmulatorlCommands implements CommandListener {
+public class EmulatorlCommands implements PoseidonCommandListener {
 
     private boolean consumed = false;
     private PoseidonConsole console;

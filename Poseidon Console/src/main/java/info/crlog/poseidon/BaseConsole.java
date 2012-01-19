@@ -268,4 +268,10 @@ public abstract class BaseConsole extends JPanel implements KeyListener, CaretLi
     protected abstract void fireOnInsert(FilterBypass fb, int offset, String string, AttributeSet attr);
 
     protected abstract void fireOnReplace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs);
+
+    protected abstract void fireKeyReleased(KeyEvent e);
+
+    protected abstract void fireKeyPressed(KeyEvent e);
+
+    protected abstract void fireKeyTyped(KeyEvent e);
 }

@@ -1,4 +1,4 @@
-package info.crlog.poseidon;
+package info.crlog.poseidon.event;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.DocumentFilter.FilterBypass;

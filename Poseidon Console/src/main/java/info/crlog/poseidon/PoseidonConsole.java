@@ -1,8 +1,10 @@
 package info.crlog.poseidon;
 
+import info.crlog.poseidon.event.PoseidonCommandListener;
+import info.crlog.poseidon.event.PoseidonEventListener;
+import info.crlog.poseidon.event.PoseidonKeyListener;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,7 +21,8 @@ import javax.swing.text.DocumentFilter.FilterBypass;
 public class PoseidonConsole extends BaseConsole {
 
     protected Deque<PoseidonEventListener> eventListeners;
-    protected Deque<CommandListener> commandListeners;
+    protected Deque<PoseidonCommandListener> commandListeners;
+    protected Deque<PoseidonKeyListener> keyListeners;
     protected HashMap<Integer, String> history;
     /**
      * The position of the history log which increases or decreases when the
@@ -31,7 +34,8 @@ public class PoseidonConsole extends BaseConsole {
     public PoseidonConsole() {
         this("~");
         eventListeners = new LinkedList<PoseidonEventListener>();
-        commandListeners = new LinkedList<CommandListener>();
+        commandListeners = new LinkedList<PoseidonCommandListener>();
+        keyListeners = new LinkedList<PoseidonKeyListener>();
         history = new HashMap<Integer, String>();
     }
 
@@ -44,12 +48,21 @@ public class PoseidonConsole extends BaseConsole {
     }
 
     /**
+     * Adds a listener that will be notified when keys are pressed
+     *
+     * @param listener
+     */
+    public void addKeyListener(PoseidonKeyListener listener) {
+        keyListeners.add(listener);
+    }
+
+    /**
      * Adds a command listener which is notified when the user enters a new
      * command i.e. when the user types a string and presses the enter key
      *
      * @param listener is added at the end of the queue of listeners
      */
-    public void addCommandListener(CommandListener listener) {
+    public void addCommandListener(PoseidonCommandListener listener) {
         commandListeners.add(listener);
     }
 
@@ -61,6 +74,27 @@ public class PoseidonConsole extends BaseConsole {
      */
     public void addEventListener(PoseidonEventListener listener) {
         eventListeners.add(listener);
+    }
+
+    /**
+     * @param listener listener to be removed
+     */
+    public void removeKeyListener(PoseidonKeyListener listener) {
+        keyListeners.remove(listener);
+    }
+
+    /**
+     * @param listener listener to be removed
+     */
+    public void removeCommandListener(PoseidonCommandListener listener) {
+        commandListeners.remove(listener);
+    }
+
+    /**
+     * @param listener listener to be removed
+     */
+    public void removeEventListener(PoseidonEventListener listener) {
+        eventListeners.remove(listener);
     }
 
     @Override
@@ -76,6 +110,7 @@ public class PoseidonConsole extends BaseConsole {
             e.consume();
             printNewLine();
         }
+        fireKeyPressed(e);
     }
 
     public void keyReleased(KeyEvent e) {
@@ -89,26 +124,16 @@ public class PoseidonConsole extends BaseConsole {
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_UP) {
-            if ((historyPosition - 1) >= 0) {
-                historyPosition--;
-                if (history.containsKey(historyPosition)) {
-                    filter.clearUserInput();
-                    printInplace(history.get(historyPosition));
-                }
-            }
+            handleUpKey();
         }
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            if ((historyPosition + 1) <= history.size()) {
-                historyPosition++;
-                if (history.containsKey(historyPosition)) {
-                    filter.clearUserInput();
-                    printInplace(history.get(historyPosition));
-                }
-            }
+            handleDownKey();
         }
+        fireKeyReleased(e);
     }
 
     public void keyTyped(KeyEvent e) {
+        fireKeyTyped(e);
     }
 
     public void caretUpdate(CaretEvent e) {
@@ -127,9 +152,47 @@ public class PoseidonConsole extends BaseConsole {
         return backgroundColour;
     }
 
+    private void handleDownKey() {
+        if ((historyPosition + 1) <= history.size()) {
+            historyPosition++;
+            if (history.containsKey(historyPosition)) {
+                filter.clearUserInput();
+                printInplace(history.get(historyPosition));
+            }
+        }
+    }
+
+    private void handleUpKey() {
+        if ((historyPosition - 1) >= 0) {
+            historyPosition--;
+            if (history.containsKey(historyPosition)) {
+                filter.clearUserInput();
+                printInplace(history.get(historyPosition));
+            }
+        }
+    }
+
+    protected void fireKeyTyped(KeyEvent e) {
+        for (PoseidonKeyListener listener : keyListeners) {
+            listener.keyTyped(e);
+        }
+    }
+
+    protected void fireKeyPressed(KeyEvent e) {
+        for (PoseidonKeyListener listener : keyListeners) {
+            listener.keyPressed(e);
+        }
+    }
+
+    protected void fireKeyReleased(KeyEvent e) {
+        for (PoseidonKeyListener listener : keyListeners) {
+            listener.keyReleased(e);
+        }
+    }
+
     protected void fireCommand(PoseidonCommand command) {
         if (command.isValid()) {
-            for (CommandListener listener : commandListeners) {
+            for (PoseidonCommandListener listener : commandListeners) {
                 listener.onCommand(command);
                 if (listener.isConsumed()) {
                     break;
