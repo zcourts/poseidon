@@ -4,6 +4,7 @@
  */
 package info.crlog.poseidon;
 
+import info.crlog.poseidon.console.PoseidonConsole;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import javax.swing.event.CaretEvent;

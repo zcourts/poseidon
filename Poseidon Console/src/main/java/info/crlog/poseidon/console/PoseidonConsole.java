@@ -1,4 +1,4 @@
-package info.crlog.poseidon;
+package info.crlog.poseidon.console;
 
 import info.crlog.poseidon.event.PoseidonCommandListener;
 import info.crlog.poseidon.event.PoseidonEventListener;

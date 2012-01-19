@@ -36,7 +36,7 @@ public class Tab extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        console = new info.crlog.poseidon.PoseidonConsole();
+        console = new info.crlog.poseidon.console.PoseidonConsole();
 
         setLayout(new java.awt.GridLayout(1, 1));
         add(console);
@@ -44,7 +44,7 @@ public class Tab extends JPanel {
         getAccessibleContext().setAccessibleParent(this);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private info.crlog.poseidon.PoseidonConsole console;
+    private info.crlog.poseidon.console.PoseidonConsole console;
     // End of variables declaration//GEN-END:variables
 
     public String getTitle() {

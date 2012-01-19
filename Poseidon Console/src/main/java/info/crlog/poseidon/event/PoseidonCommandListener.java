@@ -1,7 +1,7 @@
 package info.crlog.poseidon.event;
 
-import info.crlog.poseidon.PoseidonCommand;
-import info.crlog.poseidon.PoseidonConsole;
+import info.crlog.poseidon.console.PoseidonCommand;
+import info.crlog.poseidon.console.PoseidonConsole;
 
 /**
  *

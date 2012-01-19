@@ -1,4 +1,4 @@
-package info.crlog.poseidon;
+package info.crlog.poseidon.console;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
