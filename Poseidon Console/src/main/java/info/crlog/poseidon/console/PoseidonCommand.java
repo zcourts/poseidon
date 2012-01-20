@@ -13,6 +13,7 @@ public class PoseidonCommand {
     private HashMap<String, String> params;
     private String command;
     private String rawParameters;
+    private boolean hasArgs;
 
     /**
      * Creates a new command from the given string
@@ -34,7 +35,9 @@ public class PoseidonCommand {
         if (idx == -1) {
             command = rawCommand;
             rawParameters = "";
+            hasArgs = false;
         } else {
+            hasArgs = true;
             command = temp.substring(0, idx).trim();
             rawParameters = temp.substring(idx).trim();
             String[] paramPairs = rawParameters.split(" ");
@@ -63,6 +66,13 @@ public class PoseidonCommand {
 //            String key = it.next();
 //            System.out.println("[Key]:" + key + "[value]:" + params.get(key));
 //        }
+    }
+
+    /**
+     * @return true if there are any arguments,false otherwise
+     */
+    public boolean hasArguments() {
+        return hasArgs;
     }
 
     /**
@@ -122,7 +132,12 @@ public class PoseidonCommand {
      * key, instead the entire key is stash=true
      */
     public String getString(String param) {
-        return params.get(param);
+        String val = params.get(param);
+        if (val != null && !val.isEmpty()) {
+            return val;
+        } else {
+            return "";
+        }
     }
 
     /**

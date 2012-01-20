@@ -31,28 +31,22 @@ public class EmulatorlCommandHandler implements PoseidonCommandListener {
     }
 
     public void onCommand(PoseidonCommand command) {
-        if (console != null) {
-            switch(EmulatorCommand.get(command.getCommand())){
-                case CLEAR:handleClear(command);break;
-                case EXIT :handleExit(command);break;
-                case CD:handleCD(command);break;
+
+        if (console != null && command.isValid()) {
+            switch (EmulatorCommand.get(command.getCommand())) {
+                case CLEAR:
+                    handleClear(command);
+                    break;
+                case EXIT:
+                    handleExit(command);
+                    break;
+                case CD:
+                    handleCD(command);
+                    break;
                 case NOT_SUPPORTED:
-                default:handleExternal(command);
+                default:
+                    handleExternal(command);
             }
-//            if (command.toString().equalsIgnoreCase("clear")) {
-//                console.clearConsole();
-//            }
-//            if (command.toString().equalsIgnoreCase("clear -prefix")) {
-//                console.setUsingPrefix(false);
-//                console.clearConsole();
-//            }
-//            if (command.toString().equalsIgnoreCase("clear -prefix=true")) {
-//                console.setUsingPrefix(true);
-//                console.clearConsole();
-//            }
-//            if (command.toString().equals("exit")) {
-//                terminal.closeTab(tab.getID());
-//            }
         }
     }
 
@@ -61,18 +55,24 @@ public class EmulatorlCommandHandler implements PoseidonCommandListener {
     }
 
     private void handleClear(PoseidonCommand command) {
-
+        if (!command.hasArguments()) {
+            console.clearConsole();
+        } else if (command.getBool("-prefix")) {
+            console.setUsingPrefix(true);
+            console.clearConsole();
+        } else {
+            console.setUsingPrefix(false);
+            console.clearConsole();
+        }
     }
 
     private void handleExit(PoseidonCommand command) {
-
+        terminal.closeTab(tab.getID());
     }
 
     private void handleCD(PoseidonCommand command) {
-
     }
 
     private void handleExternal(PoseidonCommand command) {
-
     }
 }

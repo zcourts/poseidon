@@ -1,8 +1,10 @@
 package info.crlog.poseidon.console;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
@@ -33,8 +35,8 @@ public class PoseidonDocumentFilter extends DocumentFilter {
             console().getStyledDocument().remove(0, width);
             console.printNewLine();
             forceClear = false;
-        } catch (Exception exc) {
-            exc.printStackTrace();
+        } catch (Exception ex) {
+            Logger.getLogger(PoseidonDocumentFilter.class.getName()).log(Level.SEVERE, ex.getMessage());
         }
     }
 
@@ -115,7 +117,7 @@ public class PoseidonDocumentFilter extends DocumentFilter {
             newLineOffset = -1;
             oldNewLineOffset = 0;
             fb.remove(0, length);
-        } else if ((offset >= (newLineOffset))){// + console.getLinePrefix().length()))) {
+        } else if ((offset >= (newLineOffset))) {// + console.getLinePrefix().length()))) {
             fb.remove(offset, length);
         }
     }
