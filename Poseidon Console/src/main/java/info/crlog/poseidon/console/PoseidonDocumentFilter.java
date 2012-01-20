@@ -75,6 +75,15 @@ public class PoseidonDocumentFilter extends DocumentFilter {
         }
     }
 
+    /**
+     * Gets the user input without affecting the caret or any internal offsets
+     *
+     * @return the string the user has entered on the current line
+     */
+    public String getUserInput() {
+        return getInput(false);
+    }
+
     private String getInput(boolean updateOldOffest) {
         StyledDocument doc = console().getStyledDocument();
         String input = "";

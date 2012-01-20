@@ -24,6 +24,7 @@ public class PoseidonConsole extends BaseConsole {
     protected Deque<PoseidonCommandListener> commandListeners;
     protected Deque<PoseidonKeyListener> keyListeners;
     protected HashMap<Integer, String> history;
+    protected String tempInput;
     /**
      * The position of the history log which increases or decreases when the
      * user uses the up or down arrow keys and gets reset to the most current
@@ -121,12 +122,19 @@ public class PoseidonConsole extends BaseConsole {
                 //reset history position to the end (historyPosition is 0 based so -1)
                 historyPosition = history.size() - 1;
                 history.put(historyPosition++, command.toString());
+                tempInput = null;//clear the temp input since the user's pressed enter
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_UP) {
+            if (tempInput == null) {
+                tempInput = filter.getUserInput();
+            }
             handleUpKey();
         }
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            if (tempInput == null) {
+                tempInput = filter.getUserInput();
+            }
             handleDownKey();
         }
         fireKeyReleased(e);
@@ -158,6 +166,11 @@ public class PoseidonConsole extends BaseConsole {
             if (history.containsKey(historyPosition)) {
                 filter.clearUserInput();
                 printInplace(history.get(historyPosition));
+            }
+        } else {
+            if (tempInput != null) {
+                filter.clearUserInput();
+                printInplace(tempInput);
             }
         }
     }
