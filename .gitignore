@@ -1,0 +1,3 @@
+#ignore anything in the target dir except jars
+*/target/*
+!*/target/*.jar
