@@ -24,7 +24,7 @@
     <Property name="rows" type="int" value="1"/>
   </Layout>
   <SubComponents>
-    <Component class="info.crlog.poseidon.PoseidonConsole" name="console">
+    <Component class="info.crlog.poseidon.terminal.console.PoseidonConsole" name="console">
     </Component>
   </SubComponents>
 </Form>

@@ -1,4 +1,4 @@
-package info.crlog.poseidon;
+package info.crlog.poseidon.terminal;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -12,14 +12,16 @@ public class Tab extends JPanel {
     private String currentDirectory;
     private String title;
     private int id;
-    private PoseidonInternalCommands internalCommands;
+    private EmulatorlCommandHandler internalCommands;
+    private Terminal terminal;
 
     /**
      * Creates new form Tab
      */
-    public Tab(String path) {
+    public Tab(String path, Terminal term) {
         currentDirectory = path;
-        internalCommands = new PoseidonInternalCommands();
+        terminal = term;
+        internalCommands = new EmulatorlCommandHandler(this, terminal);
         initComponents();
         setOpaque(false);
         setBackground(console.getBackgroundColour());
@@ -36,7 +38,7 @@ public class Tab extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        console = new info.crlog.poseidon.PoseidonConsole();
+        console = new info.crlog.poseidon.console.PoseidonConsole();
 
         setLayout(new java.awt.GridLayout(1, 1));
         add(console);
@@ -44,7 +46,7 @@ public class Tab extends JPanel {
         getAccessibleContext().setAccessibleParent(this);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private info.crlog.poseidon.PoseidonConsole console;
+    private info.crlog.poseidon.console.PoseidonConsole console;
     // End of variables declaration//GEN-END:variables
 
     public String getTitle() {

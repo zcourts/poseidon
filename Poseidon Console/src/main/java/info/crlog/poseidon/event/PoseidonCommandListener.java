@@ -1,10 +1,13 @@
-package info.crlog.poseidon;
+package info.crlog.poseidon.event;
+
+import info.crlog.poseidon.console.PoseidonCommand;
+import info.crlog.poseidon.console.PoseidonConsole;
 
 /**
  *
  * @author Courtney Robinson <courtney@crlog.info>
  */
-public interface CommandListener {
+public interface PoseidonCommandListener {
     /**
      * Gives the command processor a reference to the terminal
      * @param console

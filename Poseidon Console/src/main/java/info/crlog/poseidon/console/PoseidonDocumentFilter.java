@@ -1,8 +1,10 @@
-package info.crlog.poseidon;
+package info.crlog.poseidon.console;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
@@ -23,13 +25,6 @@ public class PoseidonDocumentFilter extends DocumentFilter {
         this.console = console;
     }
 
-    public void setNewLineOffset(int newRangeStart) {
-        if (newLineOffset >= 0) {
-            oldNewLineOffset = newLineOffset;
-        }
-        newLineOffset = newRangeStart;
-    }
-
     /**
      * Removes all text from the current document
      */
@@ -40,8 +35,8 @@ public class PoseidonDocumentFilter extends DocumentFilter {
             console().getStyledDocument().remove(0, width);
             console.printNewLine();
             forceClear = false;
-        } catch (Exception exc) {
-            exc.printStackTrace();
+        } catch (Exception ex) {
+            Logger.getLogger(PoseidonDocumentFilter.class.getName()).log(Level.SEVERE, ex.getMessage());
         }
     }
 
@@ -65,6 +60,19 @@ public class PoseidonDocumentFilter extends DocumentFilter {
 
     public PoseidonCommand getCommand() {
         return new PoseidonCommand(getCommand(true));
+    }
+
+    /**
+     * Clear only the text the user has typed since they last hit enter
+     */
+    public void clearUserInput() {
+        String input = getInput(false);
+        StyledDocument doc = console().getStyledDocument();
+        try {
+            doc.remove(console.getConsoleOffset() - input.length(), input.length());
+        } catch (BadLocationException ex) {
+            Logger.getLogger(PoseidonDocumentFilter.class.getName()).log(Level.SEVERE, ex.getMessage());
+        }
     }
 
     private String getInput(boolean updateOldOffest) {
@@ -104,11 +112,12 @@ public class PoseidonDocumentFilter extends DocumentFilter {
     @Override
     public void remove(FilterBypass fb, int offset, int length) throws
             BadLocationException {
+        console.fireOnRemove(fb, offset, length);
         if (forceClear) {
             newLineOffset = -1;
             oldNewLineOffset = 0;
             fb.remove(0, length);
-        } else if ((offset >= (newLineOffset + console.getLinePrefix().length()))) {
+        } else if ((offset >= (newLineOffset))) {// + console.getLinePrefix().length()))) {
             fb.remove(offset, length);
         }
     }
@@ -131,6 +140,7 @@ public class PoseidonDocumentFilter extends DocumentFilter {
     @Override
     public void insertString(FilterBypass fb, int offset, String string,
             AttributeSet attr) throws BadLocationException {
+        console.fireOnInsert(fb, offset, string, attr);
         fb.insertString(offset, string, attr);
     }
 
@@ -152,6 +162,7 @@ public class PoseidonDocumentFilter extends DocumentFilter {
     @Override
     public void replace(FilterBypass fb, int offset, int length, String text,
             AttributeSet attrs) throws BadLocationException {
+        console.fireOnReplace(fb, offset, length, text, attrs);
         fb.replace(offset, length, text, attrs);
     }
 
@@ -172,15 +183,31 @@ public class PoseidonDocumentFilter extends DocumentFilter {
         return false;
     }
 
-    public int caretPosition() {
-//        StyledDocument doc = console().getStyledDocument();
-//        try {
-//            if (doc.getLength() >= 2 && doc.getText(doc.getLength() - 2, 2).equals("\n")) {
-//                return console().getStyledDocument().getLength() - (getCommand(false).length() - 2);
-//            }
-//        } catch (BadLocationException ex) {
-//            Logger.getLogger(PoseidonDocumentFilter.class.getName()).log(Level.SEVERE, ex.getMessage());
-//        }
-        return console.getConsoleOffset() - getCommand(false).length();
+    /**
+     * Updates the Caret's position, setting the range within wich the caret is
+     * allowed to be and moving the caret within that range if need be
+     */
+    public void updateCaretPosition() {
+        updateCaretPosition(true);
+    }
+
+    /**
+     * @see
+     * <code>updateCaretPosition()</code>
+     * @param updateOldOffset if true then the lower end of the range that the
+     * caret is allowed to be in is updated, if false then only the caret's
+     * position is forced into the allowed range.
+     */
+    public void updateCaretPosition(boolean updateOldOffset) {
+        //set the new line offset
+        int newRangeStart = console.getConsoleOffset();
+        if (updateOldOffset) {
+            if (newLineOffset >= 0) {
+                oldNewLineOffset = newLineOffset;
+            }
+            newLineOffset = newRangeStart;
+        }
+        //then add the default console prompt (MUST BE DONE IN THIS ORDER!!!)
+        console().setCaretPosition(newRangeStart);
     }
 }
