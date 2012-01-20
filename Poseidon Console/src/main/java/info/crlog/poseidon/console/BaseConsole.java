@@ -85,12 +85,12 @@ public abstract class BaseConsole extends JPanel implements KeyListener, CaretLi
     }
 
     public final void printWithoutPrefix(String contents) {
-        if (!usingPrefix) {
+        if (!isUsingPrefix()) {
             print(contents);
         } else {
-            usingPrefix = false;
+            setUsingPrefix(false);
             print(contents);
-            usingPrefix = true;//don't print the cmd prefix just the line we pass it
+            setUsingPrefix(true);//don't print the cmd prefix just the line we pass it
         }
     }
 
@@ -99,9 +99,13 @@ public abstract class BaseConsole extends JPanel implements KeyListener, CaretLi
     }
 
     public void printInplace(String content) {
-        usingPrefix = false;
-        print(content, attr, true);
-        usingPrefix = true;
+        if (isUsingPrefix()) {
+            setUsingPrefix(false);
+            print(content, attr, true);
+            setUsingPrefix(true);
+        } else {
+            print(content, attr, true);
+        }
     }
 
     public void print(String output, SimpleAttributeSet style, boolean inplace) {
@@ -138,7 +142,7 @@ public abstract class BaseConsole extends JPanel implements KeyListener, CaretLi
      * @return
      */
     public String getLinePrefix(String folder) {
-        if (usingPrefix) {
+        if (isUsingPrefix()) {
             String sep = System.getProperty("line.separator");
             folder = folder.replace(sep, "poseidonconsoleseperator");
             String[] paths = folder.split("poseidonconsoleseperator");

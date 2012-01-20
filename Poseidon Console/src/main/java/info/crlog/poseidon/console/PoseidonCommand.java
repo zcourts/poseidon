@@ -1,6 +1,7 @@
 package info.crlog.poseidon.console;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *
@@ -36,8 +37,47 @@ public class PoseidonCommand {
         } else {
             command = temp.substring(0, idx).trim();
             rawParameters = temp.substring(idx).trim();
+            String[] paramPairs = rawParameters.split(" ");
+            for (String pair : paramPairs) {
+                //is it of the form key=value?
+                int equalsIdx = pair.indexOf("=");
+                //if = is found and character before = is not an escape, i.e. \=
+                //then we have a key value pair
+                if (equalsIdx != -1 && pair.indexOf("\\") != (equalsIdx - 1)) {
+                    params.put(pair.substring(0, equalsIdx), pair.substring(equalsIdx + 1));
+                } else {
+                    if (equalsIdx != -1 && pair.indexOf("\\") == (equalsIdx - 1)) {
+                        //if the user entered git stash\=true replace \
+                        params.put(pair.replace("\\", ""), "");
+                    } else {
+                        //if user enters git stash then stash has no value assigned to it
+                        //set it's value to empty
+                        params.put(pair, "");
+                    }
+                }
+            }
         }
-        System.out.println("command:" + command + "[params]" + rawParameters);
+//        System.out.println("command:" + command + "[params]" + rawParameters);
+//        Iterator<String> it = params.keySet().iterator();
+//        while (it.hasNext()) {
+//            String key = it.next();
+//            System.out.println("[Key]:" + key + "[value]:" + params.get(key));
+//        }
+    }
+
+    /**
+     * This checks if a parameter key has been set by the user
+     *
+     * @param key
+     * @return if the user types git stash then calling
+     * <code>isSet("stash");</code> will yield true, however doing
+     * <code>getString("stash")</code> will return an empty string. The opposite
+     * is true if the user types git stash=true the value returned by getString
+     * will be "true", consequently an invocation of
+     * <code>getBool("stash")</code> will yield the boolean value true.
+     */
+    public boolean isSet(String key) {
+        return params.containsKey(key);
     }
 
     /**
@@ -68,6 +108,21 @@ public class PoseidonCommand {
      */
     public String getCommand() {
         return command;
+    }
+
+    /**
+     * Gets the string value for the given parameter
+     *
+     * @param param
+     * @return the value if one was set or an empty string An empty string is
+     * returned if the user types for e.g. git stash if the user types git
+     * stash=true then "true" is returned. This method also returns an empty
+     * string if the user types e.g. git stash\=true the \ is treated as an
+     * escape sequence and the string "true" is not assigned to stash as it's
+     * key, instead the entire key is stash=true
+     */
+    public String getString(String param) {
+        return params.get(param);
     }
 
     /**

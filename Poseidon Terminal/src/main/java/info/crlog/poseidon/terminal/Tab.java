@@ -1,4 +1,4 @@
-package info.crlog.poseidon;
+package info.crlog.poseidon.terminal;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -12,14 +12,16 @@ public class Tab extends JPanel {
     private String currentDirectory;
     private String title;
     private int id;
-    private EmulatorlCommands internalCommands;
+    private EmulatorlCommandHandler internalCommands;
+    private Terminal terminal;
 
     /**
      * Creates new form Tab
      */
-    public Tab(String path) {
+    public Tab(String path, Terminal term) {
         currentDirectory = path;
-        internalCommands = new EmulatorlCommands();
+        terminal = term;
+        internalCommands = new EmulatorlCommandHandler(this, terminal);
         initComponents();
         setOpaque(false);
         setBackground(console.getBackgroundColour());

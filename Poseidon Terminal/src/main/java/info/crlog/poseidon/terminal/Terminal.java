@@ -1,4 +1,4 @@
-package info.crlog.poseidon;
+package info.crlog.poseidon.terminal;
 
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -13,13 +13,11 @@ public class Terminal extends javax.swing.JFrame {
      * Reference to all currently opened tabs
      */
     private HashMap<Integer, Tab> tabRefs;
-    private static Terminal instance;
 
     /**
      * Creates new form Terminal
      */
     public Terminal() {
-        instance = this;
         tabRefs = new HashMap<Integer, Tab>();
         initComponents();
         setSize(500, 500);
@@ -42,29 +40,29 @@ public class Terminal extends javax.swing.JFrame {
             //tabs weren't visible so current tab was removed from tab pane
             tabs.addTab(tabRefs.get(0).getTitle(), tabRefs.get(0));
         }
-        tabRefs.put(currentTabIndex, new Tab(getHomeDir()));
+        tabRefs.put(currentTabIndex, new Tab(getHomeDir(), this));
         tabRefs.get(currentTabIndex).setTitle(title);
         tabRefs.get(currentTabIndex).setID(currentTabIndex);
         tabs.addTab(title, tabRefs.get(currentTabIndex));
         tabs.setSelectedComponent(tabRefs.get(currentTabIndex));
     }
 
-    public static void closeTab(int tabID) {
-        if (instance.tabRefs.size() == 1) {
+    public void closeTab(int tabID) {
+        if (tabRefs.size() == 1) {
             //if there's only one tab then exit program
             System.exit(0);
         } else {
             if (tabID == -1) {
                 //close current tab
-                if (instance.tabs.getSelectedComponent() instanceof Tab) {
-                    tabID = ((Tab) instance.tabs.getSelectedComponent()).getID();
+                if (tabs.getSelectedComponent() instanceof Tab) {
+                    tabID = ((Tab) tabs.getSelectedComponent()).getID();
                 } else {
                     //hmmmm - why do we have something that's not an instance of tab?
                     return;
                 }
             }
-            instance.tabs.remove(instance.tabRefs.get(tabID));
-            instance.tabRefs.remove(tabID);
+            tabs.remove(tabRefs.get(tabID));
+            tabRefs.remove(tabID);
         }
     }
 

@@ -21,7 +21,7 @@
     <property name="basedir" value="B:\dev\projects\console\Poseidon\Poseidon Terminal"/>
     <property name="java.endorsed.dirs" value="C:\Program Files\Java\jdk1.7.0_02\jre\lib\endorsed"/>
     <property name="os.arch" value="amd64"/>
-    <property name="surefire.real.class.path" value="B:\dev\projects\console\Poseidon\Poseidon Terminal\target\surefire\surefirebooter4378176795867797609.jar"/>
+    <property name="surefire.real.class.path" value="B:\dev\projects\console\Poseidon\Poseidon Terminal\target\surefire\surefirebooter8957092274499883233.jar"/>
     <property name="java.io.tmpdir" value="C:\Users\Courtney\AppData\Local\Temp\"/>
     <property name="line.separator" value="
 "/>
@@ -45,7 +45,7 @@
     <property name="java.vm.specification.version" value="1.7"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="C:\Program Files\Java\jdk1.7.0_02\jre"/>
-    <property name="sun.java.command" value="B:\dev\projects\console\Poseidon\Poseidon Terminal\target\surefire\surefirebooter4378176795867797609.jar B:\dev\projects\console\Poseidon\Poseidon Terminal\target\surefire\surefire2291141905734489575tmp B:\dev\projects\console\Poseidon\Poseidon Terminal\target\surefire\surefire6302866617278500787tmp"/>
+    <property name="sun.java.command" value="B:\dev\projects\console\Poseidon\Poseidon Terminal\target\surefire\surefirebooter8957092274499883233.jar B:\dev\projects\console\Poseidon\Poseidon Terminal\target\surefire\surefire5313798910254578936tmp B:\dev\projects\console\Poseidon\Poseidon Terminal\target\surefire\surefire1230054876793821010tmp"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
     <property name="user.language" value="en"/>
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>

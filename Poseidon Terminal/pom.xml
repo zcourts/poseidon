@@ -37,7 +37,7 @@
 
                     <archive>
                         <manifest>
-                            <mainClass>info.crlog.poseidon.Terminal</mainClass>
+                            <mainClass>info.crlog.poseidon.terminal.Terminal</mainClass>
                             <addClasspath>true</addClasspath>
                         </manifest>
                     </archive>
