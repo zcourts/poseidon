@@ -20,7 +20,7 @@ public class PoseidonDocumentFilter extends DocumentFilter {
     //range of where the current line starts and ends
     private int newLineOffset = -1, oldNewLineOffset = 0;
     private boolean forceClear = false;
-
+	private boolean listeningForCommands=true;
     public PoseidonDocumentFilter(BaseConsole console) {
         this.console = console;
     }

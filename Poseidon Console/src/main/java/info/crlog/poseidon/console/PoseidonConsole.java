@@ -168,7 +168,7 @@ public class PoseidonConsole extends BaseConsole {
                 printInplace(history.get(historyPosition));
             }
         } else {
-            if (tempInput != null) {
+            if (tempInput != null && !tempInput.isEmpty()) {
                 filter.clearUserInput();
                 printInplace(tempInput);
             }
