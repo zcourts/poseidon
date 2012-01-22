@@ -20,3 +20,12 @@ a "terminal emulator" which uses the console.
 * Plugins
 * ANSI colouring support
 * SSH
+
+# Rough Road Map 
+
+Features to implement in the order given
+
+* CD
+* export
+* improve input from external process
+* implement output to external process
