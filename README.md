@@ -26,6 +26,9 @@ a "terminal emulator" which uses the console.
 
 Features to implement in the order given
 
+* Pending test, Poseidon Console could be replaced with http://jline.sourceforge.net/ since it implements
+  most of what the console module does. That then leaves the focus on the Terminal and Implementing the internal commands
+
 * CD
 * export
 * improve input from external process
