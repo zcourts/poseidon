@@ -35,3 +35,8 @@ Features to implement in the order given
 * implement output to external process
 * Implement plugin system
 * Implement cross platform system access as a plugin using http://www.hyperic.com/products/sigar or any available alternative
+
+Given what I've learn so far implementing this I think I'll set my sights on upgrading the aims
+Looking at http://www.gnu.org/software/bash/manual/ and Scala combinators, http://www.scala-lang.org/api/current/scala/util/parsing/combinator/Parsers.html
+I could effectively just port bash, by that I mean the commands and scripting. Depending on how easy/hard it is to use combinators.
+Which also gives me an excuse to continue learning Scala...
