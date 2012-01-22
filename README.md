@@ -10,7 +10,7 @@ a "terminal emulator" which uses the console.
 * Support for the ANSI colour output (see http://en.wikipedia.org/wiki/ANSI_escape_code or http://pueblo.sourceforge.net/doc/manual/ansi_color_codes.html)
 * Support for plugins written specifically for Poseidon
 * Support for executing any external command available on the user's path
-* Built in SSH (Possibly using http://www.jcraft.com/jsch/ or https://github.com/shikhar/sshj (possibly http://mina.apache.org/sshd/ ?)pending investigation)
+* Built in SSH (Possibly using http://www.jcraft.com/jsch/ or https://github.com/shikhar/sshj (possibly http://mina.apache.org/sshd/ ?) pending investigation)
 
 # Feature priority in order of importance
 
