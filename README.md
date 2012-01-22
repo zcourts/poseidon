@@ -21,7 +21,7 @@ a "terminal emulator" which uses the console.
 * ANSI colouring support
 * SSH
 
-# Rough Road Map 
+# Rough Road Map
 
 Features to implement in the order given
 
@@ -29,3 +29,5 @@ Features to implement in the order given
 * export
 * improve input from external process
 * implement output to external process
+* Implement plugin system
+* Implement cross platform system access as a plugin using http://www.hyperic.com/products/sigar or any available alternative
