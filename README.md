@@ -1,3 +1,4 @@
+![Screenshot of git](https://github.com/zcourts/poseidon/raw/master/Console%20Screenshot%20at%202012-01-22%2016:07:00.png "Screenshot of GIT")
 # Poseidon Terminal Emulator and Console
 
 Poseidon is composed of two maven modules. The first is a "console" and the other
